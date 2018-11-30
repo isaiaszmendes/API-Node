@@ -3,30 +3,25 @@ import { Router } from '../common/router'
 import { User } from './users.model'
 
 class UsersRouter extends Router {
+
+    constructor(){
+        super()
+        this.on('beforeRender', document => {
+            document.password = undefined
+        })
+    }
+
     applyRoutes(app: restify.Server){
         
         app.get('/users', (req, res, next) => {
-            User.find().then(users => {
-                res.json(users)
-                return next()
-            })                        
+            User.find().then(this.render(res, next))              
         })
 
         app.get('/users/:id', (req, res, next) => {
-            User.findById(req.params.id).then(user => {
-                if(user){
-                    res.status(200)
-                    res.json(user)
-                    return next()
-                }
-                res.json({error: 'not found'})
-                res.status(404)
-                return next()
-            })
+            User.findById(req.params.id).then(this.render(res, next))  
         })
 
         app.post('/users', (req,res,next) => {
-            // let user = new User(req.body)
 
             let user = new User({
                 name: req.body.name,
@@ -35,20 +30,7 @@ class UsersRouter extends Router {
             })
             
             user.save()
-                .then(user => {    
-                    res.status(201)
-                    user.password = undefined
-                    res.json(user)
-                    return next()
-                })
-                .catch(err => {
-                    res.status(400)
-                    res.json({ 
-                        message: 'Falha ao cadastrar User!', 
-                        error: err
-                    })
-                    return next()
-                })
+                .then(this.render(res, next))  
         })
 
         app.put('/users/:id', (req, res, next) => {
@@ -63,24 +45,13 @@ class UsersRouter extends Router {
                         res.send(404)
                     }
                 })
-                .then(user => {
-                    res.json(user)
-                    return next()
-                })
+                .then(this.render(res, next))  
         })
 
         app.patch('/users/:id', (req, res, next) => {
             const options = { new: true}
             User.findByIdAndUpdate(req.params.id, req.body, options)
-                .then(user => {
-                    if (user) {
-                        user.password = undefined
-                        res.json(user)
-                        return next()
-                    }
-                    res.send(404)
-                    return next()
-                })
+                .then(this.render(res, next))  
         })
 
         app.del('/users/:id',  (req, res, next) => {
@@ -97,8 +68,4 @@ class UsersRouter extends Router {
     }
 }
 
-export const usersRouter = new UsersRouter()            // let user = {
-    //     name: req.body.name,
-    //     email: req.body.email,
-    //     password: req.body.password
-    // }
+export const usersRouter = new UsersRouter()

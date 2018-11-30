@@ -18,49 +18,28 @@ var users_model_1 = require("./users.model");
 var UsersRouter = /** @class */ (function (_super) {
     __extends(UsersRouter, _super);
     function UsersRouter() {
-        return _super !== null && _super.apply(this, arguments) || this;
+        var _this = _super.call(this) || this;
+        _this.on('beforeRender', function (document) {
+            document.password = undefined;
+        });
+        return _this;
     }
     UsersRouter.prototype.applyRoutes = function (app) {
+        var _this = this;
         app.get('/users', function (req, res, next) {
-            users_model_1.User.find().then(function (users) {
-                res.json(users);
-                return next();
-            });
+            users_model_1.User.find().then(_this.render(res, next));
         });
         app.get('/users/:id', function (req, res, next) {
-            users_model_1.User.findById(req.params.id).then(function (user) {
-                if (user) {
-                    res.status(200);
-                    res.json(user);
-                    return next();
-                }
-                res.json({ error: 'not found' });
-                res.status(404);
-                return next();
-            });
+            users_model_1.User.findById(req.params.id).then(_this.render(res, next));
         });
         app.post('/users', function (req, res, next) {
-            // let user = new User(req.body)
             var user = new users_model_1.User({
                 name: req.body.name,
                 email: req.body.email,
                 password: req.body.password
             });
             user.save()
-                .then(function (user) {
-                res.status(201);
-                user.password = undefined;
-                res.json(user);
-                return next();
-            })
-                .catch(function (err) {
-                res.status(400);
-                res.json({
-                    message: 'Falha ao cadastrar User!',
-                    error: err
-                });
-                return next();
-            });
+                .then(_this.render(res, next));
         });
         app.put('/users/:id', function (req, res, next) {
             var options = { overwrite: true };
@@ -73,23 +52,12 @@ var UsersRouter = /** @class */ (function (_super) {
                     res.send(404);
                 }
             })
-                .then(function (user) {
-                res.json(user);
-                return next();
-            });
+                .then(_this.render(res, next));
         });
         app.patch('/users/:id', function (req, res, next) {
             var options = { new: true };
             users_model_1.User.findByIdAndUpdate(req.params.id, req.body, options)
-                .then(function (user) {
-                if (user) {
-                    user.password = undefined;
-                    res.json(user);
-                    return next();
-                }
-                res.send(404);
-                return next();
-            });
+                .then(_this.render(res, next));
         });
         app.del('/users/:id', function (req, res, next) {
             users_model_1.User.remove({ _id: req.params.id }).exec()
@@ -106,8 +74,4 @@ var UsersRouter = /** @class */ (function (_super) {
     };
     return UsersRouter;
 }(router_1.Router));
-exports.usersRouter = new UsersRouter(); // let user = {
-//     name: req.body.name,
-//     email: req.body.email,
-//     password: req.body.password
-// }
+exports.usersRouter = new UsersRouter();
