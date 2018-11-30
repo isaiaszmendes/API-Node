@@ -20,13 +20,20 @@ var Server = /** @class */ (function () {
             try {
                 // Create server
                 _this.app = restify.createServer({
-                    name: 'meat-api',
-                    version: '1.0.0'
+                    name: 'api',
+                    version: '1.0.0',
                 });
                 _this.app.use(restify.plugins.queryParser());
                 _this.app.use(restify.plugins.bodyParser());
                 _this.app.use(merge_pacth_parser_1.mergePatchBodyParser);
-                // Routes   
+                // Routes 
+                _this.app.get('/', function (req, res, next) {
+                    res.json({
+                        name: 'api',
+                        author: 'Isaias Mendes'
+                    });
+                    next();
+                });
                 for (var _i = 0, routers_1 = routers; _i < routers_1.length; _i++) {
                     var router = routers_1[_i];
                     router.applyRoutes(_this.app);

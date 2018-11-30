@@ -13,69 +13,25 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var router_1 = require("../common/router");
+var model_router_1 = require("../common/model-router");
 var users_model_1 = require("./users.model");
 var UsersRouter = /** @class */ (function (_super) {
     __extends(UsersRouter, _super);
     function UsersRouter() {
-        var _this = _super.call(this) || this;
+        var _this = _super.call(this, users_model_1.User) || this;
         _this.on('beforeRender', function (document) {
             document.password = undefined;
         });
         return _this;
     }
     UsersRouter.prototype.applyRoutes = function (app) {
-        var _this = this;
-        app.get('/users', function (req, res, next) {
-            users_model_1.User.find().then(_this.render(res, next));
-        });
-        app.get('/users/:id', function (req, res, next) {
-            users_model_1.User.findById(req.params.id).then(_this.render(res, next));
-        });
-        app.post('/users', function (req, res, next) {
-            var user = new users_model_1.User({
-                name: req.body.name,
-                email: req.body.email,
-                password: req.body.password
-            });
-            user.save()
-                .then(_this.render(res, next))
-                .catch(next);
-        });
-        app.put('/users/:id', function (req, res, next) {
-            var options = { runValidators: true, overwrite: true };
-            users_model_1.User.update({ _id: req.params.id }, req.body, options).exec()
-                .then(function (result) {
-                if (result.n) {
-                    return users_model_1.User.findById(req.params.id);
-                }
-                else {
-                    res.send(404);
-                }
-            })
-                .then(_this.render(res, next))
-                .catch(next);
-        });
-        app.patch('/users/:id', function (req, res, next) {
-            var options = { runValidators: true, new: true };
-            users_model_1.User.findByIdAndUpdate(req.params.id, req.body, options)
-                .then(_this.render(res, next))
-                .catch(next);
-        });
-        app.del('/users/:id', function (req, res, next) {
-            users_model_1.User.remove({ _id: req.params.id }).exec()
-                .then(function (cmdResult) {
-                if (cmdResult.result.n) {
-                    res.send(204);
-                }
-                else {
-                    res.send(404);
-                }
-                return next();
-            })
-                .catch(next);
-        });
+        app.get('/users', this.findAll);
+        app.get('/users/:id', [this.validateId, this.findById]);
+        app.post('/users', this.save);
+        app.put('/users/:id', [this.validateId, this.replace]);
+        app.patch('/users/:id', [this.validateId, this.update]);
+        app.del('/users/:id', [this.validateId, this.delete]);
     };
     return UsersRouter;
-}(router_1.Router));
+}(model_router_1.ModelRouter));
 exports.usersRouter = new UsersRouter();

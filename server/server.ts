@@ -22,15 +22,23 @@ export class Server {
                 
                 // Create server
                 this.app = restify.createServer({
-                name: 'meat-api',
-                    version: '1.0.0'
+                    name: 'api',
+                    version: '1.0.0',
                 })
 
                 this.app.use(restify.plugins.queryParser())
                 this.app.use(restify.plugins.bodyParser())
                 this.app.use(mergePatchBodyParser)
 
-                // Routes   
+                // Routes 
+                this.app.get('/', (req, res, next) =>{
+                    res.json({
+                        name: 'api',
+                        author: 'Isaias Mendes'
+                    })
+                    next()
+                })  
+                
                 for (let router of routers ){
                     router.applyRoutes(this.app)
                 }          
