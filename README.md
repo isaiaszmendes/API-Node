@@ -4,7 +4,9 @@ Dados fornecidos:
   name, email, password, age
 
 1. [Installation](#1-installation)
-2. [Usage](#2-usage)
+2. [Config](#2-config)
+3. [Usage](#3-usage)
+
 3. [Used Technologies](#3-used-technologies)
 
 ## 1. Installation
@@ -13,10 +15,17 @@ Dados fornecidos:
   git clone https://github.com/isaiaszmendes/API-Node.git
   cd API-Node
   npm install 
-  npm start
 ```
 
-## 2. Usage
+## 2. Config
+
+> Para alterar as configuraçes do banco, porta, caminho, entrar na pasta  common/environment.js
+
+## 3. Usage
+ > Rode o comando 
+```
+  npm start
+```
  > Descrevendo os endpoints
 
 ```
