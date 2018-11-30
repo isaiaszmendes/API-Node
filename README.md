@@ -29,7 +29,7 @@ Dados fornecidos:
 ```
 > Obtendo Usuários
 ```
-  GET /get: Listagem de Usurios
+  GET /get: Listagem de Usuário
 ```
 
 ```
@@ -62,7 +62,7 @@ Dados fornecidos:
 ```
 > Obtendo Usuário pelo id
 ```
- GET /get/{id}: Listagem de um Usurio especifico
+ GET /get/{id}: Listagem de um Usuário especifico
 ```
 
 ```
@@ -78,7 +78,7 @@ Dados fornecidos:
 
 > Adição de um Usurio
 ```
- POST /post: Adição de um Usurio
+ POST /post: Adição de um Usuário
 ```
 Necessário enviar email valido, nome maior que 3 caracteres, password com hash bcripty
 ```
@@ -102,7 +102,7 @@ Response ...
 }
 ```
 
- > Atualiza todos os campos do Usurio
+ > Atualiza todos os campos do Usuário
 ```
  PUT /put/{id}: Atualiza todos os campos do Usurio
 ```
@@ -134,7 +134,7 @@ response ...
 Exemplo com `name`
 ```
 {
-	"name": "Seu Madruga"
+    "name": "Seu Madruga"
 }
 
 response ...
