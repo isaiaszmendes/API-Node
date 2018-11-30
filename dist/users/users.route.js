@@ -43,7 +43,7 @@ var UsersRouter = /** @class */ (function (_super) {
                 .catch(next);
         });
         app.put('/users/:id', function (req, res, next) {
-            var options = { overwrite: true };
+            var options = { runValidators: true, overwrite: true };
             users_model_1.User.update({ _id: req.params.id }, req.body, options).exec()
                 .then(function (result) {
                 if (result.n) {
@@ -57,7 +57,7 @@ var UsersRouter = /** @class */ (function (_super) {
                 .catch(next);
         });
         app.patch('/users/:id', function (req, res, next) {
-            var options = { new: true };
+            var options = { runValidators: true, new: true };
             users_model_1.User.findByIdAndUpdate(req.params.id, req.body, options)
                 .then(_this.render(res, next))
                 .catch(next);

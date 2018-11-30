@@ -9,7 +9,7 @@ var userSchema = new Schema({
         type: String,
         required: true,
         maxlength: 70,
-        minlength: 2
+        minlength: 3
     },
     email: {
         type: String,
@@ -28,18 +28,32 @@ var userSchema = new Schema({
 }, {
     versionKey: false
 });
-userSchema.pre('save', function (next) {
+var hashPassword = function (obj, next) {
+    bcrypt.hash(obj.password, environment_1.environment.security.saltRounds)
+        .then(function (hash) {
+        obj.password = hash;
+        next();
+    })
+        .catch(next);
+};
+var saveMiddleware = function (next) {
     var user = this;
     if (!user.isModified('password')) {
         next();
     }
     else {
-        bcrypt.hash(user.password, environment_1.environment.security.saltRounds)
-            .then(function (hash) {
-            user.password = hash;
-            next();
-        })
-            .catch(next);
+        hashPassword(user, next);
     }
-});
+};
+var updateMiddleware = function (next) {
+    if (!this.getUpdate().password) {
+        next();
+    }
+    else {
+        hashPassword(this.getUpdate(), next);
+    }
+};
+userSchema.pre('save', saveMiddleware);
+userSchema.pre('findOneAndUpdate', updateMiddleware);
+userSchema.pre('update', updateMiddleware);
 exports.User = mongoose.model('User', userSchema);
