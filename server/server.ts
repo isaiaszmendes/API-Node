@@ -3,6 +3,7 @@ import { environment } from '../common/environment'
 import { Router } from '../common/router'
 import * as mongoose from 'mongoose'
 import { mergePatchBodyParser } from './merge-pacth.parser'
+import { handleError } from './error.handler'
 
 export class Server {
     
@@ -39,6 +40,7 @@ export class Server {
                     resolve(this.app)
                 })
                 
+                this.app.on('restifyError', handleError)
 
             }catch(error){
                 return reject(error)

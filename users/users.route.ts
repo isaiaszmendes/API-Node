@@ -31,6 +31,7 @@ class UsersRouter extends Router {
             
             user.save()
                 .then(this.render(res, next))  
+                .catch(next)
         })
 
         app.put('/users/:id', (req, res, next) => {
@@ -46,12 +47,14 @@ class UsersRouter extends Router {
                     }
                 })
                 .then(this.render(res, next))  
+                .catch(next)
         })
 
         app.patch('/users/:id', (req, res, next) => {
             const options = { new: true}
             User.findByIdAndUpdate(req.params.id, req.body, options)
                 .then(this.render(res, next))  
+                .catch(next)
         })
 
         app.del('/users/:id',  (req, res, next) => {
@@ -64,6 +67,7 @@ class UsersRouter extends Router {
                     }
                     return next()
                 })
+                .catch(next)
         })
     }
 }

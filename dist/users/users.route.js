@@ -39,7 +39,8 @@ var UsersRouter = /** @class */ (function (_super) {
                 password: req.body.password
             });
             user.save()
-                .then(_this.render(res, next));
+                .then(_this.render(res, next))
+                .catch(next);
         });
         app.put('/users/:id', function (req, res, next) {
             var options = { overwrite: true };
@@ -52,12 +53,14 @@ var UsersRouter = /** @class */ (function (_super) {
                     res.send(404);
                 }
             })
-                .then(_this.render(res, next));
+                .then(_this.render(res, next))
+                .catch(next);
         });
         app.patch('/users/:id', function (req, res, next) {
             var options = { new: true };
             users_model_1.User.findByIdAndUpdate(req.params.id, req.body, options)
-                .then(_this.render(res, next));
+                .then(_this.render(res, next))
+                .catch(next);
         });
         app.del('/users/:id', function (req, res, next) {
             users_model_1.User.remove({ _id: req.params.id }).exec()
@@ -69,7 +72,8 @@ var UsersRouter = /** @class */ (function (_super) {
                     res.send(404);
                 }
                 return next();
-            });
+            })
+                .catch(next);
         });
     };
     return UsersRouter;
