@@ -21,6 +21,8 @@ var ModelRouter = /** @class */ (function (_super) {
     function ModelRouter(model) {
         var _this = _super.call(this) || this;
         _this.model = model;
+        // Para paginação
+        _this.pageSize = 20;
         _this.validateId = function (req, res, next) {
             if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
                 next(new restify_errors_1.NotFoundError('Document not found'));
@@ -30,7 +32,12 @@ var ModelRouter = /** @class */ (function (_super) {
             }
         };
         _this.findAll = function (req, res, next) {
+            var page = parseInt(req.query._page || 1);
+            page = page > 0 ? page : 1;
+            var skip = (page - 1) * _this.pageSize;
             _this.model.find()
+                .skip(skip)
+                .limit(_this.pageSize)
                 .then(_this.renderAll(res, next))
                 .catch(next);
         };
@@ -78,6 +85,11 @@ var ModelRouter = /** @class */ (function (_super) {
         };
         return _this;
     }
+    ModelRouter.prototype.envelope = function (document) {
+        var resource = Object.assign({ _links: {} }, document.toJSON());
+        resource._links.self = "/" + this.model.collection.name + "/" + resource._id;
+        return resource;
+    };
     return ModelRouter;
 }(router_1.Router));
 exports.ModelRouter = ModelRouter;

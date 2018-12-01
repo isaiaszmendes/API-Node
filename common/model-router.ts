@@ -7,6 +7,14 @@ export abstract class ModelRouter<D extends mongoose.Document> extends Router {
     constructor(protected model: mongoose.Model<D>){
         super()
     }
+    // Para paginação
+    pageSize: number = 20
+
+    envelope(document: any): any {
+        let resource = Object.assign({_links:{}}, document.toJSON())
+        resource._links.self = `/${this.model.collection.name}/${resource._id}`
+        return resource
+    }
 
     validateId = (req, res, next) => {
         if(!mongoose.Types.ObjectId.isValid(req.params.id)){
@@ -17,7 +25,12 @@ export abstract class ModelRouter<D extends mongoose.Document> extends Router {
     }
 
     findAll = (req, res, next) => {
+        let page = parseInt(req.query._page || 1)
+        page = page > 0 ? page : 1
+        const skip = (page - 1) * this.pageSize
         this.model.find()
+            .skip(skip)
+            .limit(this.pageSize)
             .then(this.renderAll(res, next)) 
             .catch(next)             
     }

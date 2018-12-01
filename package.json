@@ -4,7 +4,7 @@
   "description": "API de Restaurantes",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon dist/main.js"
   },
   "keywords": [],
   "author": "Isaias",
@@ -17,8 +17,15 @@
   },
   "devDependencies": {
     "@types/bcrypt": "3.0.0",
+    "@types/jest": "22.1.2",
     "@types/mongoose": "4.7.32",
     "@types/restify": "5.0.6",
-    "@types/restify-errors": "4.3.2"
+    "@types/restify-errors": "4.3.2",
+    "@types/supertest": "2.0.4",
+    "jest": "22.4.2",
+    "nodemon": "^1.18.7",
+    "supertest": "3.0.0",
+    "ts-jest": "22.0.4",
+    "typescript": "2.6.2"
   }
 }
